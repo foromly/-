@@ -63,7 +63,7 @@ void addNewEdge(Map& graph, char* start, char* end, int length, int type) {
 
 
 // 修改一个已有景点的相关信息
-void updateVertexInfo(Map& graph, char* name, char* newInfo) {
+int updateVertexInfo(Map& graph, char* name) {
     
 }
  
@@ -73,7 +73,7 @@ int removeVertex(Map& graph, char* name) {
 }
 
 // 删除一条路径
-void removeEdge(Map& graph, char* start, char* end) {
+int removeEdge(Map& graph, char* start, char* end) {
     
 }
 
