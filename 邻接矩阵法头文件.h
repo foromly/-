@@ -22,7 +22,7 @@ typedef struct {
     Vertex vertices[MAX_VERTICES]; // 顶点数组
     Edge edges[MAX_VERTICES][MAX_VERTICES]; // 边的二维数组
     int numVertices; // 顶点数量
-    int numedge;//边的数量
+    int numEdge;//边的数量
 } Graph;
 
 // 初始化图
