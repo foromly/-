@@ -5,93 +5,87 @@
 #define MAX_NAME_LENGTH 100
 #define MAX_VERTICES 100
 
-// ±ßµÄÀàĞÍ
-enum EdgeType {
-    ROAD,
-    STAIRS,
-    ELEVATOR
-};
-
-// ±ß
+// è¾¹
 typedef struct {
-    int length; // ±ßµÄ³¤¶È
-    enum EdgeType type; // ±ßµÄÀàĞÍ
+    int length; // è¾¹çš„é•¿åº¦
+    int type; // è¾¹çš„ç±»å‹(0æ˜¯èµ°è·¯ï¼Œ1æ˜¯åè½¦ï¼‰
 } Edge;
 
-// ¶¥µã
+// é¡¶ç‚¹
 typedef struct {
-    char name[MAX_NAME_LENGTH]; // ¶¥µãÃû³Æ
-    char info[MAX_NAME_LENGTH]; // ¶¥µãĞÅÏ¢
+    char name[MAX_NAME_LENGTH]; // é¡¶ç‚¹åç§°
+    char info[MAX_NAME_LENGTH]; // é¡¶ç‚¹ä¿¡æ¯
 } Vertex;
 
-// Í¼
+// å›¾
 typedef struct {
-    Vertex vertices[MAX_VERTICES]; // ¶¥µãÊı×é
-    Edge edges[MAX_VERTICES][MAX_VERTICES]; // ±ßµÄ¶şÎ¬Êı×é
-    int numVertices; // ¶¥µãÊıÁ¿
+    Vertex vertices[MAX_VERTICES]; // é¡¶ç‚¹æ•°ç»„
+    Edge edges[MAX_VERTICES][MAX_VERTICES]; // è¾¹çš„äºŒç»´æ•°ç»„
+    int numVertices; // é¡¶ç‚¹æ•°é‡
+    int numedge;//è¾¹çš„æ•°é‡
 } Graph;
 
-// ³õÊ¼»¯Í¼
+// åˆå§‹åŒ–å›¾
 void initializeGraph(Graph* graph) {
     
 }
 
-//Ôö¼ÓÒ»¸öĞÂ¾°µã¼°ÆäÏà¹ØĞÅÏ¢
+//å¢åŠ ä¸€ä¸ªæ–°æ™¯ç‚¹åŠå…¶ç›¸å…³ä¿¡æ¯
 void addNewVertex(Graph* graph, const char* name, const char* info) {
     
 }
 
-// ´ÓÎÄ¼şÖĞ¶ÁÈë¾°µã
+// ä»æ–‡ä»¶ä¸­è¯»å…¥æ™¯ç‚¹
 void loadVerticesFromFile(Graph* graph, const char* filename) {
     
 }
 
-// Êä³ö¾°µãµ½ÎÄ¼şÖĞ
+// è¾“å‡ºæ™¯ç‚¹åˆ°æ–‡ä»¶ä¸­
 void saveVerticesToFile(Graph* graph, const char* filename) {
     
 }
 
 
-// Ôö¼ÓÒ»ÌõĞÂµÄÂ·¾¶
+// å¢åŠ ä¸€æ¡æ–°çš„è·¯å¾„
 void addNewEdge(Graph* graph, const char* start, const char* end, int length, int type) {
     
 }
 
 
-// ĞŞ¸ÄÒ»¸öÒÑÓĞ¾°µãµÄÏà¹ØĞÅÏ¢
+// ä¿®æ”¹ä¸€ä¸ªå·²æœ‰æ™¯ç‚¹çš„ç›¸å…³ä¿¡æ¯
 void updateVertexInfo(Graph* graph, const char* name, const char* newInfo) {
     
 }
  
-// É¾³ıÒ»¸ö¾°µã¼°ÆäÏà¹ØĞÅÏ¢
+// åˆ é™¤ä¸€ä¸ªæ™¯ç‚¹åŠå…¶ç›¸å…³ä¿¡æ¯
 void removeVertex(Graph* graph, const char* name) {
     
 }
 
-// É¾³ıÒ»ÌõÂ·¾¶
+// åˆ é™¤ä¸€æ¡è·¯å¾„
 void removeEdge(Graph* graph, const char* start, const char* end) {
     
 }
 
 
-// Ğ£Ô°ÓÎÀÀÏßÂ·
+// æ ¡å›­æ¸¸è§ˆçº¿è·¯
 void planTour(Graph* graph, const char* start, const char* wayPoint, const char* end) {
    
 }
 
 
-// Ôö¼Ó¡°ÈÆĞĞ¡±¹¦ÄÜ
+// å¢åŠ â€œç»•è¡Œâ€åŠŸèƒ½
 void avoidPath(Graph* graph, const char* avoidStart, const char* avoidEnd) {
     
 }
 
 
-// ²éÕÒ¶¥µãµÄË÷Òı
+// æŸ¥æ‰¾é¡¶ç‚¹çš„ç´¢å¼•
 int findVertexIndex(Graph* graph, const char* name) {
     
 }
 
-// ²éÕÒ×î¶ÌÂ·¾¶ºÍ¸ø³ö±¸ÓÃÂ·¾¶ 
+// æŸ¥æ‰¾æœ€çŸ­è·¯å¾„å’Œç»™å‡ºå¤‡ç”¨è·¯å¾„ 
 void findShortestPath(Graph* graph, const char* start, const char* end) {
    
 
