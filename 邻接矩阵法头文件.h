@@ -57,6 +57,7 @@ int addNewVertex(Map& graph,char* name,char* info) {
     return OK;
 }
 
+
 // 从文件中读入景点
 void loadVerticesFromFile(Map& graph, char* filename) {
     
@@ -127,7 +128,9 @@ void planTour(Map& graph, char* start, char* end) {
     //bfs
     queue<Vertex>q;
     q.push(graph->vertices[u]);
-    while(!q.empty())
+    while(!q.empty()){
+        
+    }
 }
 
 
@@ -147,10 +150,32 @@ int findVertexIndex(Map& graph, char* name) {
     return -1;
 }
 
-// 查找最短路径和给出备用路径 
+// 查找最短路径和
 void findShortestPath(Map& graph, char* start, char* end) {
-   
+    int u=findVertexIndex(graph, start);
+    int v=findVertexIndex(graph, end);
 
+    int D[MAX_VERTICES];
+    bool S[MAX_VERTICES];
+
+    memset(S,false,sizeof(S));
+
+    for(int i=0;i<graph->numVertices;i++){
+        D[i]=graph->edges[u][i]->length;
+    }
+
+    int D[u]=0,w;
+    bool S[u]=true;
+
+    for(int i=0;i<graph->numVertices;i++){
+       int min=MaxInt;
+        for(int j=0;j<graph->numVertices;i++){
+            if(!S[j]&&D[j]<MaxInt){
+                min=D[j];
+                S[j]=true;
+            }
+        
+    }
     
 }
 
