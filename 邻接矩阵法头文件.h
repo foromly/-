@@ -174,9 +174,13 @@ void findShortestPath(Map& graph, char* start, char* end) {
                 min=D[j];
                 S[j]=true;
             }
-        
+        w=j;
     }
-    
+    for(int j=0;j<graph->numVertices;j++){
+        if(!S[j]&&min+graph->edges[w][j]<D[j]){
+            D[j]=min+graph->edges[w][j];
+        }
+    }
 }
 
 #endif /* GRAPH_H */
