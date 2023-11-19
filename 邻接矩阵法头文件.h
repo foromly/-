@@ -113,8 +113,23 @@ int removeEdge(Map& graph, char* start, char* end) {
     int v=findVertexIndex(graph, end);
     if(u!=-1&&v!=-1){
         //说明没有这两个景点
-        
-    }
+        else if(u==-1){
+            cout<<start<<"该点不存在，不需要删除路径！";
+        }
+        else if(v==-1){
+            cout<<end<<"该点不存在，不需要删除路径！";
+        }
+	    else if(!isEdge(G,u,v)){
+		cout<<start<<"和"<<end<<"这两个景点之间不存在路径，不需要再删除路径！";	
+	}
+	int temp=G.edge[u][v];
+	G.e--;
+	G.edge[u][v]=INF;
+	G.edge[v][u]=INF;
+	printf("已成功删除从%s到%s的路径。\n",start,end);	
+	
+    
+   
     //有这两个景点的话就直接把这两条边的的值和类型都变为初始值
     //变为跟init函数里面一样
     
