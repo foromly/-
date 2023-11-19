@@ -138,10 +138,11 @@ int removeEdge(Map& graph, char* start, char* end) {
 
 
 //给出从起始到结束的所有景点   校园游览线路
-void planTour(Map& graph, char* start, char* end) {
+void planTour(Map& graph, char* start,char* halfway ,char* end) {
     int u=findVertexIndex(graph, start);
     int v=findVertexIndex(graph, end);
-    //bfs
+    int w=findVertexIndex(graph,halfway);
+    //dfs
     queue<Vertex>q;
     q.push(graph->vertices[u]);
     while(!q.empty()){
@@ -168,31 +169,57 @@ int findVertexIndex(Map& graph, char* name) {
 
 // 查找最短路径和
 void findShortestPath(Map& graph, char* start, char* end) {
-    int u=findVertexIndex(graph, start);
-    int v=findVertexIndex(graph, end);
+    int dist[MAX_VERTICES]; // 存储起点到各个顶点的最短距离
+    int prev[MAX_VERTICES]; // 存储最短路径中各个顶点的前驱顶点
+    bool visited[MAX_VERTICES]; // 标记顶点是否已访问
 
-    int D[MAX_VERTICES];
-    bool S[MAX_VERTICES];
+    int startIdx = findVertexIndex(graph, start);
+    int endIdx = findVertexIndex(graph, end);
 
-    memset(S,false,sizeof(S));
-
-    for(int i=0;i<graph->numVertices;i++){
-        D[i]=graph->edges[u][i]->length;
+    // 初始化
+    for (int i = 0; i < graph->numVertices; i++) {
+        dist[i] = graph->edges[startIdx][i].length;
+        prev[i] = startIdx;
+        visited[i] = false;
     }
+    dist[startIdx] = 0;
+    visited[startIdx] = true;
 
-    int D[u]=0,w;
-    bool S[u]=true;
-
-    for(int i=0;i<graph->numVertices;i++){
-       int min=MaxInt;
-        for(int j=0;j<graph->numVertices;i++){
-            if(!S[j]&&D[j]<MaxInt){
-                min=D[j];
-                S[j]=true;
+    // 计算最短路径
+    for (int i = 1; i < graph->numVertices; i++) {
+        int minDist = INF;
+        int u = startIdx;
+        for (int j = 0; j < graph->numVertices; j++) {
+            if (!visited[j] && dist[j] < minDist) {
+                minDist = dist[j];
+                u = j;
             }
-        
+        }
+        visited[u] = true;
+        for (int j = 0; j < graph->numVertices; j++) {
+            if (!visited[j] && graph->edges[u][j].length < INF) {
+                if (dist[u] + graph->edges[u][j].length < dist[j]) {
+                    dist[j] = dist[u] + graph->edges[u][j].length;
+                    prev[j] = u;
+                }
+            }
+        }
     }
-    
+
+    // 输出最短路径
+    int path[MAX_VERTICES];
+    int pathLength = 0;
+    int current = endIdx;
+    while (current != startIdx) {
+        path[pathLength++] = current;
+        current = prev[current];
+    }
+    path[pathLength++] = startIdx;
+    printf("Shortest Path from %s to %s: ", start, end);
+    for (int i = pathLength - 1; i >= 0; i--) {
+        printf("%s ", graph->vertices[path[i]].name);
+    }
+    printf("\n");
 }
 
 #endif /* GRAPH_H */
