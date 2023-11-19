@@ -165,7 +165,7 @@ int findVertexIndex(Map& graph, char* name) {
 }
 
 // 查找最短路径和
-void findShortestPath(Map& graph, char* start, char* end) {
+void findShortestPath(Map& graph, char* start, char* end,int type) {
     int dist[MAX_VERTICES]; // 存储起点到各个顶点的最短距离
     int prev[MAX_VERTICES]; // 存储最短路径中各个顶点的前驱顶点
     bool visited[MAX_VERTICES]; // 标记顶点是否已访问
@@ -175,7 +175,7 @@ void findShortestPath(Map& graph, char* start, char* end) {
 
     // 初始化
     for (int i = 0; i < graph->numVertices; i++) {
-        dist[i] = graph->edges[startIdx][i].length;
+        dist[i] = graph->edges[startIdx][i].length[type];
         prev[i] = startIdx;
         visited[i] = false;
     }
@@ -194,9 +194,9 @@ void findShortestPath(Map& graph, char* start, char* end) {
         }
         visited[u] = true;
         for (int j = 0; j < graph->numVertices; j++) {
-            if (!visited[j] && graph->edges[u][j].length < INF) {
-                if (dist[u] + graph->edges[u][j].length < dist[j]) {
-                    dist[j] = dist[u] + graph->edges[u][j].length;
+            if (!visited[j] && graph->edges[u][j].length[type] < INF) {
+                if (dist[u] + graph->edges[u][j].length[type] < dist[j]) {
+                    dist[j] = dist[u] + graph->edges[u][j].length[type];
                     prev[j] = u;
                 }
             }
