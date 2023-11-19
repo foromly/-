@@ -1,4 +1,4 @@
-#ifndef GRAPH_H
+0#ifndef GRAPH_H
 #define GRAPH_H
 #include<bits/stdc++.h> 
 uisng namespace std;
@@ -57,6 +57,7 @@ int addNewVertex(Map& graph,char* name,char* info) {
     return OK;
 }
 
+
 // 从文件中读入景点
 void loadVerticesFromFile(Map& graph, char* filename) {
     
@@ -92,7 +93,16 @@ int updateVertexInfo(Map& graph, char* name) {
      char info[MAX_NAME_LENGTH]; // 顶点信息
     
     //用case或者if判断一下是要修改名字还是顶点信息
-    
+     printf("请输入新的景点名称：");
+     scanf("%s", newName);
+     printf("请输入新的景点信息：");
+     scanf("%s", newInfo);
+
+     // 假设用户输入了新的名称和信息，直接更新顶点信息
+     strcpy(graph->vertices[index].name, newName);
+     strcpy(graph->vertices[index].info, newInfo);
+
+     return OK;
 }
  
 // 删除一个景点及其相关信息
@@ -102,7 +112,14 @@ int removeVertex(Map& graph, char* name) {
         return ERROR;
     }
     //删除这个顶点的话就把graph->vertices数组里面的顶点从当前位置开始把后面的往前挪一个
-    
+    for (int i = index; i < graph->numVertices - 1; i++) {
+        strcpy(graph->vertices[i].name, graph->vertices[i + 1].name);
+        strcpy(graph->vertices[i].info, graph->vertices[i + 1].info);
+    }
+
+    graph->numVertices--; // 顶点数量减一
+
+    return OK;
 }
 
 // 删除一条路径
@@ -127,7 +144,9 @@ void planTour(Map& graph, char* start, char* end) {
     //bfs
     queue<Vertex>q;
     q.push(graph->vertices[u]);
-    while(!q.empty())
+    while(!q.empty()){
+        
+    }
 }
 
 
@@ -147,10 +166,32 @@ int findVertexIndex(Map& graph, char* name) {
     return -1;
 }
 
-// 查找最短路径和给出备用路径 
+// 查找最短路径和
 void findShortestPath(Map& graph, char* start, char* end) {
-   
+    int u=findVertexIndex(graph, start);
+    int v=findVertexIndex(graph, end);
 
+    int D[MAX_VERTICES];
+    bool S[MAX_VERTICES];
+
+    memset(S,false,sizeof(S));
+
+    for(int i=0;i<graph->numVertices;i++){
+        D[i]=graph->edges[u][i]->length;
+    }
+
+    int D[u]=0,w;
+    bool S[u]=true;
+
+    for(int i=0;i<graph->numVertices;i++){
+       int min=MaxInt;
+        for(int j=0;j<graph->numVertices;i++){
+            if(!S[j]&&D[j]<MaxInt){
+                min=D[j];
+                S[j]=true;
+            }
+        
+    }
     
 }
 
