@@ -123,30 +123,51 @@ int removeVertex(Map& graph, char* name) {
 }
 
 // 删除一条路径
-int removeEdge(Map& graph, char* start, char* end) {
+int removeEdge(Map& graph, char* start, char* end,int type) {
     
     int u=findVertexIndex(graph, start);
     int v=findVertexIndex(graph, end);
     if(u!=-1&&v!=-1){
         //说明没有这两个景点
-        
+        cout<<"没有这两个景点"<<endl;
+    }else if(u==1){
+        cout<<"不存在"<<start<<endl;
+    }else if(v==1){
+        cout<<"不存在"<<end<<endl;
     }
     //有这两个景点的话就直接把这两条边的的值和类型都变为初始值
     //变为跟init函数里面一样
-    
+    graph->edges[u][v].length[type] = MaxInt;
+    return OK;
 }
 
 
 //给出从起始到结束的所有景点   校园游览线路
 void planTour(Map& graph, char* start,char* halfway ,char* end) {
-    int u=findVertexIndex(graph, start);
-    int v=findVertexIndex(graph, end);
-    int w=findVertexIndex(graph,halfway);
-    //dfs
-    queue<Vertex>q;
-    q.push(graph->vertices[u]);
-    while(!q.empty()){
-        
+   int u = findVertexIndex(graph, start);
+   int w= findVertexIndex(graph,wayPoint);
+   int v = findVertexIndex(graph, end); 
+   bool visited[MAX_VERTICES] = {false};
+    printf("路线从起点 %s 途经 %s 到终点 %s: ", start, wayPoint,end); 
+	dfs(graph, u, w, visited,type); 
+	dfs(grap,w,v,visted,type);
+	printf("\n"); 
+	}
+}
+//dfs遍历图
+void dfs(Map& graph, int vertexIndex, char* end, bool visited[],int type) {
+    visited[vertexIndex] = true;
+    // 如果当前顶点是终点，则找到了游览线路
+    if (strcmp(graph->vertices[vertexIndex].name, end) == 0) {
+        printf("%s ", graph->vertices[vertexIndex].name);
+        return;
+    }
+    printf("%s ", graph->vertices[vertexIndex].name);
+    // 遍历当前顶点的邻接顶点
+    for (int i = 0; i < graph->numVertices; i++) {
+        if (graph->edges[vertexIndex][i].length[type] != MaxInt && !visited[i]) {
+            dfs(graph, i, end, visited,type);
+        }
     }
 }
 
