@@ -137,15 +137,14 @@ int removeEdge(Map& graph, char* start, char* end) {
 
 
 //给出从起始到结束的所有景点   校园游览线路
-void planTour(Map& graph, char* start, char* end) {
+void planTour(Map& graph, char* start,char* halfway, char* end) {
     int u=findVertexIndex(graph, start);
     int v=findVertexIndex(graph, end);
-    //bfs
-    queue<Vertex>q;
-    q.push(graph->vertices[u]);
-    while(!q.empty()){
-        
-    }
+    int w=findVertexINdex(graph,halfway);
+
+	//dfs
+
+	
 }
 
 
