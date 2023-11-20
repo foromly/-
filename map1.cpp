@@ -8,7 +8,6 @@ int main() {
 
     // 初始化图
     initializeGraph(graph);
-
     int choice,judge,length,type;
     char filename[100];
     char start[100];
@@ -21,32 +20,20 @@ int main() {
 
     do {
         cout<<"====== 校园导航系统菜单 ======"<<endl;
-        cout<<"1. 从文件中读入景点"<<endl;
-        cout<<"2. 输出景点到文件"<<endl;
-        cout<<"3. 给出校园游览线路"<<endl;
-        cout<<"4. 绕行"<<endl;
-        cout<<"5. 添加一个景点"<<endl;
-		cout<<"6. 删除一个景点"<<endl;
-		cout<<"7. 修改一个景点信息"<<endl; 
-		cout<<"8. 增加一个新的路径"<<endl;
-		cout<<"9. 删除一个路径" <<endl;
-		cout<<"10. 选择最短路径"<<endl;
-        cout<<"11. 退出"<<endl;
+        cout<<"1. 给出校园游览线路"<<endl;
+        cout<<"2. 绕行"<<endl;
+        cout<<"3. 添加一个景点"<<endl;
+		cout<<"4. 删除一个景点"<<endl;
+		cout<<"5. 修改一个景点信息"<<endl; 
+		cout<<"6. 增加一个新的路径"<<endl;
+		cout<<"7. 删除一个路径" <<endl;
+		cout<<"8. 选择最短路径"<<endl;
+        cout<<"9. 退出"<<endl;
         cout<<"请输入您的选择：";
         cin>>choice;
 
         switch (choice) {
             case 1:
-                cout<<"请输入文件名："<<endl;
-                scanf("%s", filename);
-                loadVerticesFromFile(graph, filename);
-                break;
-            case 2:
-                cout<<"请输入文件名："<<endl;
-                scanf("%s", filename);
-                saveVerticesToFile(graph, filename);
-                break;
-            case 3:
                 cout<<"请输入起点："<<endl;
                 scanf("%s", start);
                 cout<<"请输入途经点："<<endl;
@@ -57,14 +44,14 @@ int main() {
                 cin>>type;
                 planTour(graph, start, wayPoint, end,type);
                 break;
-            case 4:
+            case 2:
                 cout<<"请输入要绕行的起点："<<endl;
                 scanf("%s", avoidStart);
                 cout<<"请输入要绕行的终点："<<endl;
                 scanf("%s", avoidEnd);
                 avoidPath(graph, avoidStart, avoidEnd);
                 break;
-            case 5:
+            case 3:
             	cout<<"请输入要增加景点的名称"<<endl;
             	scanf("%s",name);
             	cout<<"请输入要增加景点的信息"<<endl;
@@ -76,7 +63,7 @@ int main() {
                 cout<<"增加成功"<<endl; 
                 }
 				break;
-            case 6:
+            case 4:
             	cout<<"请输入删除景点名称: "<<endl;
             	scanf("%s",name);
                 judge=removeVertex(graph,name);
@@ -86,12 +73,12 @@ int main() {
 					cout<<"景点删除成功"<<endl;
 				}
 				break;
-			case 7:
+			case 5:
 				cout<<"请输入要修改景点的名称"<<endl;
 				 scanf("%s",name);
 				updateVertexInfo(graph,name);
 				break;
-			case 8:
+			case 6:
 				cout<<"请输入起点"<<endl;
 				 scanf("%s", start);
 				 cout<<"请输入终点"<<endl;
@@ -101,7 +88,7 @@ int main() {
 				 cout<<"请输入路径类型" <<endl; 
 				 cin>>type;
 				addNewEdge(graph,start,end,length,type);
-			case 9:
+			case 7:
 				cout<<"请输入起点"<<endl;
 				 scanf("%s", start);
 				 cout<<"请输入终点"<<endl;
@@ -110,7 +97,7 @@ int main() {
 				 cin>>type;
 				removeEdge(graph,start,end,type);
 				break;
-			case 10:
+			case 8:
 				cout<<"请输入起点"<<endl;
 				 scanf("%s", start);
 				 cout<<"请输入终点"<<endl;
@@ -119,13 +106,13 @@ int main() {
 				 cin>>type;
 				findShortestPath(graph, start, end,type); 
 				break; 
-            case 11:
+            case 9:
                 cout<<"谢谢使用，再见！";
                 break;
             default:
                 cout<<"无效的选择，请重新输入";
         }
-    } while (choice != 5);
+    } while (choice != 9);
 
     // 释放图的内存
     //destroyGraph(graph);
