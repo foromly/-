@@ -1,12 +1,12 @@
 #include <iostream>
-#include "ÁÚ½Ó¾ØÕó·¨Í·ÎÄ¼ş.h"
+#include "é‚»æ¥çŸ©é˜µæ³•å¤´æ–‡ä»¶.h"
 using namespace std;
 
 int main() {
-    // ÉùÃ÷²¢·ÖÅäÄÚ´æ¸øÍ¼
+    // å£°æ˜å¹¶åˆ†é…å†…å­˜ç»™å›¾
     Map graph = new Graph;
 
-    // ³õÊ¼»¯Í¼
+    // åˆå§‹åŒ–å›¾
     initializeGraph(graph);
 
     int choice,judge,length,type;
@@ -20,113 +20,115 @@ int main() {
     char info[100];
 
     do {
-        cout<<"====== Ğ£Ô°µ¼º½ÏµÍ³²Ëµ¥ ======"<<endl;
-        cout<<"1. ´ÓÎÄ¼şÖĞ¶ÁÈë¾°µã"<<endl;
-        cout<<"2. Êä³ö¾°µãµ½ÎÄ¼ş"<<endl;
-        cout<<"3. ¼Æ»®Ğ£Ô°ÓÎÀÀÏßÂ·"<<endl;
-        cout<<"4. ÈÆĞĞ"<<endl;
-        cout<<"5. Ìí¼ÓÒ»¸ö¾°µã"<<endl;
-		cout<<"6. É¾³ıÒ»¸ö¾°µã"<<endl;
-		cout<<"7. ĞŞ¸ÄÒ»¸ö¾°µãĞÅÏ¢"<<endl; 
-		cout<<"8. Ôö¼ÓÒ»¸öĞÂµÄÂ·¾¶"<<endl;
-		cout<<"9. É¾³ıÒ»¸öÂ·¾¶" <<endl;
-		cout<<"10. ±¸Ñ¡Â·Ïß"<<endl;
-        cout<<"11. ÍË³ö"<<endl;
-        cout<<"ÇëÊäÈëÄúµÄÑ¡Ôñ£º";
+        cout<<"====== æ ¡å›­å¯¼èˆªç³»ç»Ÿèœå• ======"<<endl;
+        cout<<"1. ä»æ–‡ä»¶ä¸­è¯»å…¥æ™¯ç‚¹"<<endl;
+        cout<<"2. è¾“å‡ºæ™¯ç‚¹åˆ°æ–‡ä»¶"<<endl;
+        cout<<"3. ç»™å‡ºæ ¡å›­æ¸¸è§ˆçº¿è·¯"<<endl;
+        cout<<"4. ç»•è¡Œ"<<endl;
+        cout<<"5. æ·»åŠ ä¸€ä¸ªæ™¯ç‚¹"<<endl;
+		cout<<"6. åˆ é™¤ä¸€ä¸ªæ™¯ç‚¹"<<endl;
+		cout<<"7. ä¿®æ”¹ä¸€ä¸ªæ™¯ç‚¹ä¿¡æ¯"<<endl; 
+		cout<<"8. å¢åŠ ä¸€ä¸ªæ–°çš„è·¯å¾„"<<endl;
+		cout<<"9. åˆ é™¤ä¸€ä¸ªè·¯å¾„" <<endl;
+		cout<<"10. é€‰æ‹©æœ€çŸ­è·¯å¾„"<<endl;
+        cout<<"11. é€€å‡º"<<endl;
+        cout<<"è¯·è¾“å…¥æ‚¨çš„é€‰æ‹©ï¼š";
         cin>>choice;
 
         switch (choice) {
             case 1:
-                cout<<"ÇëÊäÈëÎÄ¼şÃû£º"<<endl;
+                cout<<"è¯·è¾“å…¥æ–‡ä»¶åï¼š"<<endl;
                 scanf("%s", filename);
                 loadVerticesFromFile(graph, filename);
                 break;
             case 2:
-                cout<<"ÇëÊäÈëÎÄ¼şÃû£º"<<endl;
+                cout<<"è¯·è¾“å…¥æ–‡ä»¶åï¼š"<<endl;
                 scanf("%s", filename);
                 saveVerticesToFile(graph, filename);
                 break;
             case 3:
-                cout<<"ÇëÊäÈëÆğµã£º"<<endl;
+                cout<<"è¯·è¾“å…¥èµ·ç‚¹ï¼š"<<endl;
                 scanf("%s", start);
-                cout<<"ÇëÊäÈëÍ¾¾­µã£º"<<endl;
+                cout<<"è¯·è¾“å…¥é€”ç»ç‚¹ï¼š"<<endl;
                 scanf("%s", wayPoint);
-                cout<<"ÇëÊäÈëÖÕµã£º"<<endl;
+                cout<<"è¯·è¾“å…¥ç»ˆç‚¹ï¼š"<<endl;
                 scanf("%s", end);
-                planTour(graph, start, wayPoint, end);
+                cout<<"è¯·è¾“å…¥ä½ é€‰æ‹©æ¸¸è¡Œçš„æ–¹å¼"<<endl;
+                cin>>type;
+                planTour(graph, start, wayPoint, end,type);
                 break;
             case 4:
-                cout<<"ÇëÊäÈëÒªÈÆĞĞµÄÆğµã£º"<<endl;
+                cout<<"è¯·è¾“å…¥è¦ç»•è¡Œçš„èµ·ç‚¹ï¼š"<<endl;
                 scanf("%s", avoidStart);
-                cout<<"ÇëÊäÈëÒªÈÆĞĞµÄÖÕµã£º"<<endl;
+                cout<<"è¯·è¾“å…¥è¦ç»•è¡Œçš„ç»ˆç‚¹ï¼š"<<endl;
                 scanf("%s", avoidEnd);
                 avoidPath(graph, avoidStart, avoidEnd);
                 break;
             case 5:
-            	cout<<"ÇëÊäÈëÒªÔö¼Ó¾°µãµÄÃû³Æ"<<endl;
+            	cout<<"è¯·è¾“å…¥è¦å¢åŠ æ™¯ç‚¹çš„åç§°"<<endl;
             	scanf("%s",name);
-            	cout<<"ÇëÊäÈëÒªÔö¼Ó¾°µãµÄĞÅÏ¢"<<endl;
+            	cout<<"è¯·è¾“å…¥è¦å¢åŠ æ™¯ç‚¹çš„ä¿¡æ¯"<<endl;
 				 scanf("%s",info);
-				addNewVertex(graph,name,info);
-                cout<<"Ôö¼Ó³É¹¦"<<endl; 
+				judge=addNewVertex(graph,name,info);
+				if(judge=-1){
+					cout<<"å·²è¶…è¿‡æ™¯ç‚¹æœ€å¤§æ•°é‡æ— æ³•æ·»åŠ "<<endl;
+				}else{
+                cout<<"å¢åŠ æˆåŠŸ"<<endl; 
+                }
 				break;
             case 6:
-            	cout<<"ÇëÊäÈëÉ¾³ı¾°µãÃû³Æ: "<<endl;
+            	cout<<"è¯·è¾“å…¥åˆ é™¤æ™¯ç‚¹åç§°: "<<endl;
             	scanf("%s",name);
                 judge=removeVertex(graph,name);
-                if(judge==1){
-                	cout<<"¾°µãÉ¾³ı³É¹¦"<<endl; 
+                if(judge==-1){
+                	cout<<"æ™¯ç‚¹ä¸å­˜åœ¨,åˆ é™¤å¤±è´¥"<<endl; 
 				}else{
-					cout<<"¾°µãÉ¾³ıÊ§°Ü"<<endl;
+					cout<<"æ™¯ç‚¹åˆ é™¤æˆåŠŸ"<<endl;
 				}
 				break;
 			case 7:
-				cout<<"ÇëÊäÈëÒªĞŞ¸Ä¾°µãµÄÃû³Æ"<<endl;
+				cout<<"è¯·è¾“å…¥è¦ä¿®æ”¹æ™¯ç‚¹çš„åç§°"<<endl;
 				 scanf("%s",name);
-				judge=updateVertexInfo(graph,name);
-				if(judge==1){
-                	cout<<"ĞŞ¸Ä³É¹¦"<<endl; 
-				}else{
-					cout<<"Î´ÕÒµ½´Ë¾°µã"<<endl;
-				}
+				updateVertexInfo(graph,name);
 				break;
 			case 8:
-				cout<<"ÇëÊäÈëÆğµã"<<endl;
+				cout<<"è¯·è¾“å…¥èµ·ç‚¹"<<endl;
 				 scanf("%s", start);
-				 cout<<"ÇëÊäÈëÖÕµã"<<endl;
+				 cout<<"è¯·è¾“å…¥ç»ˆç‚¹"<<endl;
 				 scanf("%s", end);
-				 cout<<"ÇëÊäÈëÂ·¾¶³¤¶È"<<endl;
+				 cout<<"è¯·è¾“å…¥è·¯å¾„é•¿åº¦"<<endl;
 				 cin>>length;
-				 cout<<"ÇëÊäÈëÂ·¾¶ÀàĞÍ" <<endl; 
+				 cout<<"è¯·è¾“å…¥è·¯å¾„ç±»å‹" <<endl; 
 				 cin>>type;
 				addNewEdge(graph,start,end,length,type);
-				cout<<"Ìí¼Ó³É¹¦" <<endl;
 			case 9:
-				cout<<"ÇëÊäÈëÆğµã"<<endl;
+				cout<<"è¯·è¾“å…¥èµ·ç‚¹"<<endl;
 				 scanf("%s", start);
-				 cout<<"ÇëÊäÈëÖÕµã"<<endl;
+				 cout<<"è¯·è¾“å…¥ç»ˆç‚¹"<<endl;
 				 scanf("%s", end);
-				judge=removeEdge(graph,start,end);
-				if(judge==1){
-                	cout<<"Â·¾¶É¾³ı³É¹¦"<<endl; 
-				}else{
-					cout<<"Â·¾¶É¾³ıÊ§°Ü"<<endl;
-				}
+				 cout<<"è¯·è¾“å…¥ä½ è¦é€‰æ‹©åˆ é™¤çš„è¾¹çš„ç±»å‹(1.èµ°è·¯ï¼Œ2.åè½¦)";
+				 cin>>type;
+				removeEdge(graph,start,end,type);
 				break;
 			case 10:
-				
+				cout<<"è¯·è¾“å…¥èµ·ç‚¹"<<endl;
+				 scanf("%s", start);
+				 cout<<"è¯·è¾“å…¥ç»ˆç‚¹"<<endl;
+				 scanf("%s", end);
+				 cout<<"è¯·è¾“å…¥ä½ è¦é€‰æ‹©æ¸¸è¡Œçš„ç±»å‹(1.èµ°è·¯ï¼Œ2.åè½¦)";
+				 cin>>type;
+				findShortestPath(graph, start, end,type); 
 				break; 
             case 11:
-                cout<<"Ğ»Ğ»Ê¹ÓÃ£¬ÔÙ¼û£¡\n";
+                cout<<"è°¢è°¢ä½¿ç”¨ï¼Œå†è§ï¼";
                 break;
             default:
-                cout<<"ÎŞĞ§µÄÑ¡Ôñ£¬ÇëÖØĞÂÊäÈë¡£\n";
+                cout<<"æ— æ•ˆçš„é€‰æ‹©ï¼Œè¯·é‡æ–°è¾“å…¥";
         }
     } while (choice != 5);
 
-    // ÊÍ·ÅÍ¼µÄÄÚ´æ
+    // é‡Šæ”¾å›¾çš„å†…å­˜
     //destroyGraph(graph);
 
     return 0;
 }
-
