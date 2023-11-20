@@ -8,6 +8,7 @@ int main() {
 
     // 初始化图
     initializeGraph(graph);
+    
     int choice,judge,length,type;
     char filename[100];
     char start[100];
@@ -45,11 +46,17 @@ int main() {
                 planTour(graph, start, wayPoint, end,type);
                 break;
             case 2:
-                cout<<"请输入要绕行的起点："<<endl;
+                cout<<"请输入要您的起点："<<endl;
+                scanf("%s", start);
+                cout<<"请输入要您的的终点："<<endl;
+                scanf("%s", end);
+                cout<<"请输入你要避免路径的起点" <<endl;
                 scanf("%s", avoidStart);
-                cout<<"请输入要绕行的终点："<<endl;
+                cout<<"请输入你要避免路径的终点" <<endl;
                 scanf("%s", avoidEnd);
-                avoidPath(graph, avoidStart, avoidEnd);
+                cout<<"请输入你选择游行的方式"<<endl;
+                cin>>type;
+                planTourAvoidPath(graph, start, end, avoidStart, avoidEnd,type);
                 break;
             case 3:
             	cout<<"请输入要增加景点的名称"<<endl;
@@ -57,7 +64,7 @@ int main() {
             	cout<<"请输入要增加景点的信息"<<endl;
 				 scanf("%s",info);
 				judge=addNewVertex(graph,name,info);
-				if(judge=-1){
+				if(judge==-1){
 					cout<<"已超过景点最大数量无法添加"<<endl;
 				}else{
                 cout<<"增加成功"<<endl; 
