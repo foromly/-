@@ -58,14 +58,21 @@ int findVertexIndex(Map& graph, char* name) {
 }
 
 //增加一个新景点及其相关信息
-int addNewVertex(Map& graph,char* name,char* info) {
+void addNewVertex(Map& graph,char* name,char* info) {
     if(graph->numVertices>MAX_VERTICES){
-           return ERROR;
+       	cout<<"已超过景点最大数量无法添加"<<endl;
+       	return ;
     }
+    int u=findVertexIndex(graph,name);
+	if(u!=-1){
+		cout<<"已存在此景点，无法添加"<<endl;
+		return ;
+	}
     strcpy(graph->vertices[graph->numVertices].name, name);
     strcpy(graph->vertices[graph->numVertices].info, info);
     graph->numVertices++;
-    return OK;
+    cout<<"增加成功"<<endl; 
+    return ;
 }
 
 
@@ -87,8 +94,7 @@ void addNewEdge(Map& graph, char* start, char* end, int length, int type) {
     if(graph->edges[u][v].length[type]!=MaxInt){
         //这里可以尝试询问一下是否要替换原始路径
         char choice;
-        do{
-        cout<<"已存在此路径，是否要替换(y/n)";
+        cout<<"已存在此路径，是否要替换(y/n)"<<endl;
 		cin>>choice; 
 		switch(choice){
 			case 'y':
@@ -101,7 +107,6 @@ void addNewEdge(Map& graph, char* start, char* end, int length, int type) {
 			default:
 				cout<<"无效的选择,请重新输入"<<endl; 
 		}
-	}while(choice!='n');
         return ;
     }
     graph->edges[u][v].length[type]=length;
@@ -131,14 +136,14 @@ void updateVertexInfo(Map& graph, char* name) {
 		case 1:
 			cout<<"请输入新的名称"<<endl;
 			cin>>newName;
-			strcpy(graph->vertices[graph->numVertices].name, newName);
+			strcpy(graph->vertices[s].name, newName);
 			cout<<"修改名称成功"<<endl; 
 			return ;
 			break;
 		case 2:
 		    cout<<"请输入新的介绍"<<endl;
 			cin>>newInfo;
-			strcpy(graph->vertices[graph->numVertices].info, newInfo);
+			strcpy(graph->vertices[s].info, newInfo);
 			cout<<"修改介绍成功"<<endl;
 			return ;
 			break;
@@ -147,8 +152,8 @@ void updateVertexInfo(Map& graph, char* name) {
 			cin>>newName;
 			cout<<"请输入新的介绍"<<endl;
 			cin>>newInfo;	
-			strcpy(graph->vertices[graph->numVertices].name, newName);
-			strcpy(graph->vertices[graph->numVertices].info, newInfo);
+			strcpy(graph->vertices[s].name, newName);
+			strcpy(graph->vertices[s].info, newInfo);
 			cout<<"修改名称和介绍成功"<<endl;
 			return ;
 			break;
@@ -165,11 +170,8 @@ int removeVertex(Map& graph, char* name) {
     if(s==-1){
         return ERROR;
     }
-    //删除这个顶点的话就把graph->vertices数组里面的顶点从当前位置开始把后面的往前挪一个
-    for (int i = s-1; i < graph->numVertices - 1; i++) {
-        strcpy(graph->vertices[i].name, graph->vertices[i + 1].name);
-        strcpy(graph->vertices[i].info, graph->vertices[i + 1].info);
-    }
+    
+    
     for(int i=0;i<graph->numVertices;i++){
     	for(int j=0;j<2;j++){
     	if(graph->edges[s][i].length[j]<MaxInt){
@@ -177,7 +179,14 @@ int removeVertex(Map& graph, char* name) {
     		graph->edges[i][s].length[j]=MaxInt;
 		}
 	}
-	} 
+	}
+	 
+    //删除这个顶点的话就把graph->vertices数组里面的顶点从当前位置开始把后面的往前挪一个
+    for (int i = s; i < graph->numVertices - 1; i++) {
+        strcpy(graph->vertices[i].name, graph->vertices[i + 1].name);
+        strcpy(graph->vertices[i].info, graph->vertices[i + 1].info);
+    }
+    
     graph->numVertices--; // 顶点数量减一
 
     return OK;
@@ -187,17 +196,20 @@ int removeVertex(Map& graph, char* name) {
 void removeEdge(Map& graph, char* start, char* end,int type) {
     int u=findVertexIndex(graph, start);
     int v=findVertexIndex(graph, end);
-    if(u!=-1&&v!=-1){
+    if(u==-1&&v==-1){
         //说明没有这两个景点
         cout<<"没有这两个景点"<<endl;
         return ;
-    }else if(u==1){
+    }else if(u==-1){
         cout<<"不存在"<<start<<endl;
         return ;
-    }else if(v==1){
+    }else if(v==-1){
         cout<<"不存在"<<end<<endl;
         return ;
-    }
+    }else if(graph->edges[u][v].length[type]==MaxInt){
+    	cout<<"不存在此路径"<<endl;
+    	return ;
+	}
     //有这两个景点的话就直接把这两条边的的值和类型都变为初始值
     //变为跟init函数里面一样
     graph->edges[u][v].length[type] = MaxInt;
@@ -231,7 +243,7 @@ void planTour(Map& graph, char* start,char* halfway ,char* end,int type) {
    int w= findVertexIndex(graph,halfway);
    int v = findVertexIndex(graph, end); 
    bool visited[MAX_VERTICES] = {false};
-    printf("路线从起点 %s 途经 %s 到终点 %s: ", start, halfway,end); 
+    printf("路线从起点 %s 途经 %s 到终点 %s: ", start, halfway,end)<<endl; 
 	dfs(graph, u, halfway, visited,type); 
 	dfs(graph,w,end,visited,type);
 	cout<<endl; 
@@ -263,12 +275,10 @@ void planTourAvoidPath(Map& graph, char* start, char* end, char* avoid1, char* a
     int avoid1Idx = findVertexIndex(graph, avoid1);
     int avoid2Idx = findVertexIndex(graph, avoid2);
     bool visited[MAX_VERTICES] = {false};
-    printf("游行起点从%s 到 %s 避免路径 %s 到 %s: ", start, end, avoid1, avoid2);
+    printf("游行起点从%s 到 %s 避免路径 %s 到 %s: ", start, end, avoid1, avoid2)<<endl;
     dfsAvoidPath(graph, startIdx, end, visited, avoid1Idx, avoid2Idx,type);
     cout<<endl;
 }
-
-
 
 // 查找最短路径和
 void findShortestPath(Map& graph, char* start, char* end,int type) {
@@ -318,7 +328,7 @@ void findShortestPath(Map& graph, char* start, char* end,int type) {
         current = prev[current];
     }
     path[pathLength++] = startIdx;
-    printf("最短路径从 %s 到 %s: ", start, end);
+    printf("最短路径从 %s 到 %s: ", start, end)<<endl;
     for (int i = pathLength - 1; i >= 0; i--) {
         cout<<graph->vertices[path[i]].name<<endl;
         cout<<"景点介绍"<<graph->vertices[path[i]].info<<endl;
