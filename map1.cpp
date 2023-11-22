@@ -63,12 +63,7 @@ int main() {
             	scanf("%s",name);
             	cout<<"请输入要增加景点的信息"<<endl;
 				 scanf("%s",info);
-				judge=addNewVertex(graph,name,info);
-				if(judge==-1){
-					cout<<"已超过景点最大数量无法添加"<<endl;
-				}else{
-                cout<<"增加成功"<<endl; 
-                }
+				addNewVertex(graph,name,info);
 				break;
             case 4:
             	cout<<"请输入删除景点名称: "<<endl;
@@ -95,12 +90,13 @@ int main() {
 				 cout<<"请输入路径类型" <<endl; 
 				 cin>>type;
 				addNewEdge(graph,start,end,length,type);
+				break;
 			case 7:
 				cout<<"请输入起点"<<endl;
 				 scanf("%s", start);
 				 cout<<"请输入终点"<<endl;
 				 scanf("%s", end);
-				 cout<<"请输入你要选择删除的边的类型(1.走路，2.坐车)";
+				 cout<<"请输入你要选择删除的边的类型(0.走路，1.坐车)";
 				 cin>>type;
 				removeEdge(graph,start,end,type);
 				break;
@@ -109,7 +105,7 @@ int main() {
 				 scanf("%s", start);
 				 cout<<"请输入终点"<<endl;
 				 scanf("%s", end);
-				 cout<<"请输入你要选择游行的类型(1.走路，2.坐车)";
+				 cout<<"请输入你要选择游行的类型(0.走路，1.坐车)";
 				 cin>>type;
 				findShortestPath(graph, start, end,type); 
 				break; 
