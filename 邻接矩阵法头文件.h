@@ -91,6 +91,17 @@ void saveVerticesToFile(Map& graph, char* filename) {
 void addNewEdge(Map& graph, char* start, char* end, int length, int type) {
     int u=findVertexIndex(graph, start);
     int v=findVertexIndex(graph, end);
+    if(u==-1&&v==-1){
+        //说明没有这两个景点
+        cout<<"没有这两个景点"<<endl;
+        return ;
+    }else if(u==-1){
+        cout<<"不存在"<<start<<endl;
+        return ;
+    }else if(v==-1){
+        cout<<"不存在"<<end<<endl;
+        return ;
+    }
     if(graph->edges[u][v].length[type]!=MaxInt){
         //这里可以尝试询问一下是否要替换原始路径
         char choice;
@@ -218,55 +229,47 @@ void removeEdge(Map& graph, char* start, char* end,int type) {
     return ;
 }
 
-//dfs遍历图
-void dfs(Map& graph, int vertexIndex, char* end, bool visited[],int type) {
-    visited[vertexIndex] = true;
-    // 如果当前顶点是终点，则找到了游览线路
-    if (strcmp(graph->vertices[vertexIndex].name, end) == 0) {
-        cout<<graph->vertices[vertexIndex].name<<endl;
-        cout<<"景点介绍"<<graph->vertices[vertexIndex].info<<endl;
-        return;
-    }
-    cout<< graph->vertices[vertexIndex].name<<endl;
-    cout<<"景点介绍"<<graph->vertices[vertexIndex].info<<endl;
-    // 遍历当前顶点的邻接顶点
-    for (int i = 0; i < graph->numVertices; i++) {
-        if (graph->edges[vertexIndex][i].length[type] != MaxInt && !visited[i]) {
-            dfs(graph, i, end, visited,type);
-        }
-    }
+void dfsWithPath(Map& graph, int startIndex, int endIndex, bool visited[],int Path[],int type) {
+    if(startIndex==endIndex){
+    	visited[startIndex]=true;
+    	return ;
+	}
+	visited[startIndex]=true; 
+	for(int i=0;i<graph->numVertices;i++){
+		if(graph->edges[startIndex][i].length[type]!=MaxInt&&!visited[i]){
+			Path[startIndex]=i;
+			dfsWithPath(graph,i,endIndex,visited,Path,type);
+		}
+	}
+    
 }
 
-//给出从起始到结束的所有景点   校园游览线路
-void planTour(Map& graph, char* start,char* halfway ,char* end,int type) {
-   int u = findVertexIndex(graph, start);
-   int w= findVertexIndex(graph,halfway);
-   int v = findVertexIndex(graph, end); 
-   bool visited[MAX_VERTICES] = {false};
-    printf("路线从起点 %s 途经 %s 到终点 %s: ", start, halfway,end)<<endl; 
-	dfs(graph, u, halfway, visited,type); 
-	dfs(graph,w,end,visited,type);
-	cout<<endl; 
+// 从起点到途径点再到终点的游览线路规划
+void planTour(Map& graph, char* start, char* via, char* end,int type) {
+    int startIdx = findVertexIndex(graph, start);
+    int viaIdx = findVertexIndex(graph, via);
+    int endIdx = findVertexIndex(graph, end);
+    bool visited[MAX_VERTICES] = {false};
+    visited[startIdx]=true; 
+    int Path[MAX_VERTICES]={0};
+    dfsWithPath(graph, startIdx, endIdx, visited,Path,type);
+    if(visited[viaIdx]==false||visited[endIdx]==false){
+    	cout<<"此路径不通" <<endl; 
+    	return ;
+	}
+    printf("游行路线从起点 %s 到终点 %s 途径 %s: \n", start, end, via);
+    int i=startIdx;
+    while(i!=endIdx){
+    	cout<<graph->vertices[i].name<<endl;
+    	cout<<"景点介绍"<<graph->vertices[i].info<<endl;
+    	i=Path[i];
+	}
+	cout<<graph->vertices[i].name<<endl;
+    cout<<"景点介绍"<<graph->vertices[i].info<<endl;
+    cout<<endl;
+   return ;
 }
 
-
-
-// 修改后的深度优先搜索
-void dfsAvoidPath(Map& graph, int vertexIndex, char* end, bool visited[], int avoidStart, int avoidEnd,int type) {
-    visited[vertexIndex] = true;
-    if (strcmp(graph->vertices[vertexIndex].name, end) == 0) {
-        cout<<graph->vertices[vertexIndex].name<<endl;
-        cout<<"景点介绍"<<graph->vertices[vertexIndex].info<<endl;
-        return;
-    }
-    cout<<graph->vertices[vertexIndex].name<<endl;
-    cout<<"景点介绍"<<graph->vertices[vertexIndex].info<<endl;
-    for (int i = 0; i < graph->numVertices; i++) {
-        if (graph->edges[vertexIndex][i].length[type] != MaxInt && !visited[i] && (vertexIndex != avoidStart || i != avoidEnd) && (i != avoidStart || vertexIndex != avoidEnd)) {
-            dfsAvoidPath(graph, i, end, visited, avoidStart, avoidEnd,type);
-        }
-    }
-}
 
 // 避开路径的校园游览线路规划
 void planTourAvoidPath(Map& graph, char* start, char* end, char* avoid1, char* avoid2,int type) {
@@ -274,10 +277,28 @@ void planTourAvoidPath(Map& graph, char* start, char* end, char* avoid1, char* a
     int endIdx = findVertexIndex(graph, end);
     int avoid1Idx = findVertexIndex(graph, avoid1);
     int avoid2Idx = findVertexIndex(graph, avoid2);
+    int Path[MAX_VERTICES]={0};
     bool visited[MAX_VERTICES] = {false};
-    printf("游行起点从%s 到 %s 避免路径 %s 到 %s: ", start, end, avoid1, avoid2)<<endl;
-    dfsAvoidPath(graph, startIdx, end, visited, avoid1Idx, avoid2Idx,type);
+    visited[startIdx]=true; 
+    int l=graph->edges[avoid1Idx][avoid2Idx].length[type];
+    graph->edges[avoid1Idx][avoid2Idx].length[type]=MaxInt;
+    dfsWithPath(graph, startIdx, endIdx, visited,Path,type);
+    if(visited[endIdx]==false){
+    	cout<<"此路径不通" <<endl;
+		return ; 
+	}
+    printf("游行起点从%s 到 %s 避免路径 %s 到 %s: \n", start, end, avoid1, avoid2);
+    int i=startIdx;
+    while(i!=endIdx){
+    	cout<<graph->vertices[i].name<<endl;
+    	cout<<"景点介绍"<<graph->vertices[i].info<<endl;
+    	i=Path[i];
+	}
+	cout<<graph->vertices[i].name<<endl;
+    cout<<"景点介绍"<<graph->vertices[i].info<<endl;
     cout<<endl;
+    graph->edges[avoid1Idx][avoid2Idx].length[type]=l;
+   return ;
 }
 
 // 查找最短路径和
@@ -299,7 +320,7 @@ void findShortestPath(Map& graph, char* start, char* end,int type) {
     visited[startIdx] = true;
 
     // 计算最短路径
-    for (int i = 1; i < graph->numVertices; i++) {
+    for (int i = 0; i < graph->numVertices; i++) {
         int minDist = MaxInt;
         int u = startIdx;
         for (int j = 0; j < graph->numVertices; j++) {
@@ -328,7 +349,7 @@ void findShortestPath(Map& graph, char* start, char* end,int type) {
         current = prev[current];
     }
     path[pathLength++] = startIdx;
-    printf("最短路径从 %s 到 %s: ", start, end)<<endl;
+    printf("最短路径从 %s 到 %s: \n", start, end);
     for (int i = pathLength - 1; i >= 0; i--) {
         cout<<graph->vertices[path[i]].name<<endl;
         cout<<"景点介绍"<<graph->vertices[path[i]].info<<endl;
