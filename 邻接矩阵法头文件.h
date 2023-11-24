@@ -47,6 +47,54 @@ void initializeGraph(Map& graph) {
 }
 
 
+// 从文件中读入景点
+void loadVerticesFromFile(Map& graph) {
+    ifstream file("Map.txt");
+    if (file.is_open()) {
+        int numVertices, numEdgesWalk, numEdgesBus;
+        file >> numVertices >> numEdgesWalk >> numEdgesBus;
+        graph->numVertices = numVertices;
+        graph->numedge[0] = numEdgesWalk;
+        graph->numedge[1] = numEdgesBus;
+        
+        for (int i = 0; i < numVertices; i++) {
+            string name, info;
+            file >> name >> info;
+            strcpy(graph->vertices[i].name, const_cast<char*>(name.c_str()));
+          strcpy(graph->vertices[i].info, const_cast<char*>(info.c_str()));
+        }
+
+        for (int i = 0; i < numEdgesWalk + numEdgesBus; i++) {
+            int from, to;
+            int length, type;
+            file >> from >> to >> length >> type;
+            graph->edges[from][to].length[type]=length;
+        }
+        file.close();
+    }
+}
+
+// 输出景点到文件中
+void saveVerticesToFile(Map& graph) {
+    ofstream file("Map.txt");
+    if (file.is_open()) {
+        file << graph->numVertices << " " << graph->numedge[0] << " " << graph->numedge[1] << endl;
+        for (int i = 0; i < graph->numVertices; i++) {
+            file << graph->vertices[i].name << " " << graph->vertices[i].info << endl;
+        }
+        for (int i = 0; i < graph->numVertices; i++) {
+            for (int j = 0; j < graph->numVertices; j++) {
+                if (graph->edges[i][j].type != -1) {
+                    file << graph->vertices[i].name << " " << graph->vertices[j].name << " ";
+                    file << graph->edges[i][j].length[graph->edges[i][j].type] << " " << graph->edges[i][j].type << endl;
+                }
+            }
+        }
+        file.close();
+    }
+}
+
+
 // 查找顶点的索引
 int findVertexIndex(Map& graph, char* name) {
     for (int i = 0; i < graph->numVertices; i++) {
@@ -57,34 +105,26 @@ int findVertexIndex(Map& graph, char* name) {
     return -1;
 }
 
+
 //增加一个新景点及其相关信息
-void addNewVertex(Map& graph,char* name,char* info) {
+int addNewVertex(Map& graph,char* name,char* info) {
     if(graph->numVertices>MAX_VERTICES){
        	cout<<"已超过景点最大数量无法添加"<<endl;
-       	return ;
+       	return ERROR;
     }
     int u=findVertexIndex(graph,name);
 	if(u!=-1){
 		cout<<"已存在此景点，无法添加"<<endl;
-		return ;
+		return ERROR;
 	}
     strcpy(graph->vertices[graph->numVertices].name, name);
     strcpy(graph->vertices[graph->numVertices].info, info);
     graph->numVertices++;
-    cout<<"增加成功"<<endl; 
-    return ;
+    return OK;
 }
 
 
-// 从文件中读入景点
-void loadVerticesFromFile(Map& graph, char* filename) {
-    
-}
 
-// 输出景点到文件中
-void saveVerticesToFile(Map& graph, char* filename) {
-    
-}
 
 
 // 增加一条新的路径
@@ -125,6 +165,7 @@ void addNewEdge(Map& graph, char* start, char* end, int length, int type) {
     cout<<"添加成功"<<endl;
     return ;
 }
+
 
 
 // 修改一个已有景点的相关信息
@@ -224,23 +265,29 @@ void removeEdge(Map& graph, char* start, char* end,int type) {
     //有这两个景点的话就直接把这两条边的的值和类型都变为初始值
     //变为跟init函数里面一样
     graph->edges[u][v].length[type] = MaxInt;
+    graph->edges[u][v].type=-1;
     graph->numedge[type]--;
     cout<<"删除此路径成功"<<endl;
     return ;
 }
 
-void dfsWithPath(Map& graph, int startIndex, int endIndex, bool visited[],int Path[],int type) {
-    if(startIndex==endIndex){
-    	visited[startIndex]=true;
-    	return ;
-	}
-	visited[startIndex]=true; 
-	for(int i=0;i<graph->numVertices;i++){
-		if(graph->edges[startIndex][i].length[type]!=MaxInt&&!visited[i]){
-			Path[startIndex]=i;
-			dfsWithPath(graph,i,endIndex,visited,Path,type);
-		}
-	}
+void dfs(Map& graph, int current, int end, bool visited[], vector<int>& path, vector<vector<int > >& routes,int type) {
+    visited[current] = true;
+    path.push_back(current);
+
+    if (current == end) {
+        routes.push_back(path);
+        return ;
+    } else {
+        for (int i = 0; i < graph->numVertices; i++) {
+            if (graph->edges[current][i].length[type] != MaxInt && !visited[i]) {
+                dfs(graph, i, end, visited, path, routes,type);
+                visited[current] = false;
+                 path.pop_back();
+            }
+        }
+    }
+
     
 }
 
@@ -249,25 +296,31 @@ void planTour(Map& graph, char* start, char* via, char* end,int type) {
     int startIdx = findVertexIndex(graph, start);
     int viaIdx = findVertexIndex(graph, via);
     int endIdx = findVertexIndex(graph, end);
+
+    if (startIdx == -1 || viaIdx == -1 || endIdx == -1) {
+        cout << "输入的景点名称有误" << endl;
+        return;
+    }
+
     bool visited[MAX_VERTICES] = {false};
-    visited[startIdx]=true; 
-    int Path[MAX_VERTICES]={0};
-    dfsWithPath(graph, startIdx, endIdx, visited,Path,type);
-    if(visited[viaIdx]==false||visited[endIdx]==false){
-    	cout<<"此路径不通" <<endl; 
+    vector<vector<int > > routes;
+    vector<int> path;
+
+    cout << "游览线路规划：" << endl;
+    dfs(graph, startIdx, endIdx, visited, path, routes,type);
+
+    if(!visited[viaIdx]||!visited[endIdx]){
+    	cout<<"不存在此路径"<<endl;
     	return ;
 	}
-    printf("游行路线从起点 %s 到终点 %s 途径 %s: \n", start, end, via);
-    int i=startIdx;
-    while(i!=endIdx){
-    	cout<<graph->vertices[i].name<<endl;
-    	cout<<"景点介绍"<<graph->vertices[i].info<<endl;
-    	i=Path[i];
-	}
-	cout<<graph->vertices[i].name<<endl;
-    cout<<"景点介绍"<<graph->vertices[i].info<<endl;
-    cout<<endl;
-   return ;
+
+    // 按照游览顺序输出路径
+    for (int i = 0; i < routes.size(); i++) {
+        for (int j = 0; j < routes[i].size(); j++) {
+            cout << graph->vertices[routes[i][j]].name << endl;
+            cout << "景点介绍： " << graph->vertices[routes[i][j]].info << endl;
+        }
+    }
 }
 
 
@@ -277,27 +330,24 @@ void planTourAvoidPath(Map& graph, char* start, char* end, char* avoid1, char* a
     int endIdx = findVertexIndex(graph, end);
     int avoid1Idx = findVertexIndex(graph, avoid1);
     int avoid2Idx = findVertexIndex(graph, avoid2);
-    int Path[MAX_VERTICES]={0};
     bool visited[MAX_VERTICES] = {false};
-    visited[startIdx]=true; 
+    vector<vector<int > > routes;
+    vector<int> path;
     int l=graph->edges[avoid1Idx][avoid2Idx].length[type];
     graph->edges[avoid1Idx][avoid2Idx].length[type]=MaxInt;
-    dfsWithPath(graph, startIdx, endIdx, visited,Path,type);
+    
+    dfs(graph, startIdx, endIdx, visited, path, routes,type);
     if(visited[endIdx]==false){
     	cout<<"此路径不通" <<endl;
 		return ; 
 	}
     printf("游行起点从%s 到 %s 避免路径 %s 到 %s: \n", start, end, avoid1, avoid2);
-    int i=startIdx;
-    while(i!=endIdx){
-    	cout<<graph->vertices[i].name<<endl;
-    	cout<<"景点介绍"<<graph->vertices[i].info<<endl;
-    	i=Path[i];
-	}
-	cout<<graph->vertices[i].name<<endl;
-    cout<<"景点介绍"<<graph->vertices[i].info<<endl;
-    cout<<endl;
-    graph->edges[avoid1Idx][avoid2Idx].length[type]=l;
+    for (int i = 0; i < routes.size(); i++) {
+        for (int j = 0; j < routes[i].size(); j++) {
+            cout << graph->vertices[routes[i][j]].name << endl;
+            cout << "景点介绍： " << graph->vertices[routes[i][j]].info << endl;
+        }
+    }
    return ;
 }
 
