@@ -8,7 +8,7 @@ int main() {
 
     // 初始化图
     initializeGraph(graph);
-    
+    loadVerticesFromFile(graph);
     int choice,judge,length,type;
     char filename[100];
     char start[100];
@@ -63,7 +63,10 @@ int main() {
             	scanf("%s",name);
             	cout<<"请输入要增加景点的信息"<<endl;
 				 scanf("%s",info);
-				addNewVertex(graph,name,info);
+				judge=addNewVertex(graph,name,info);
+				if(judge==0){
+					cout<<"增加成功"<<endl;
+				}
 				break;
             case 4:
             	cout<<"请输入删除景点名称: "<<endl;
@@ -114,11 +117,10 @@ int main() {
                 break;
             default:
                 cout<<"无效的选择，请重新输入";
+                break;
         }
     } while (choice != 9);
 
-    // 释放图的内存
-    //destroyGraph(graph);
-
+    saveVerticesToFile(graph);
     return 0;
 }
