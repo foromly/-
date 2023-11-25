@@ -38,12 +38,10 @@ int main() {
                 cout<<"请输入起点："<<endl;
                 scanf("%s", start);
                 cout<<"请输入途经点："<<endl;
-                scanf("%s", wayPoint);
-                cout<<"请输入终点："<<endl;
                 scanf("%s", end);
                 cout<<"请输入你选择游行的方式"<<endl;
                 cin>>type;
-                planTour(graph, start, wayPoint, end,type);
+                planTour(graph, start, end,type);
                 break;
             case 2:
                 cout<<"请输入要您的起点："<<endl;
